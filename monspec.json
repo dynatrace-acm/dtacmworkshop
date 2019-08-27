@@ -1,0 +1,11 @@
+{
+	"spec_version": "2.0",
+	"timeseries": [{
+			"timeseriesId": "com.dynatrace.builtin:service.responsetime",
+			"aggregation": "avg",
+			"tags": "app:carts,environment:dev",
+			"upperWarning": 1000,
+			"upperSevere": 3000
+		}
+	]
+}

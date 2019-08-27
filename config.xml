@@ -1,0 +1,140 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.33">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.3.8"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.3.8">
+      <jobProperties/>
+      <triggers/>
+      <parameters>
+        <string>BUILD</string>
+      </parameters>
+      <options/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>BUILD</name>
+          <description>Choose Build</description>
+          <choices>
+            <string>One</string>
+            <string>Two</string>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.72">
+    <script>pipeline{
+    agent {
+        label &apos;jenkins-slave&apos;
+    }
+    parameters {
+        choice(name: &apos;BUILD&apos;, choices: [&apos;One&apos;, &apos;Two&apos;], description: &apos;Choose Build&apos;)
+    }
+
+    stages{
+        stage(&apos;Checkout code&apos;){
+            steps{
+                git &apos;https://github.com/wmsegar/bootcamp-jenkins.git&apos;
+            }
+        }
+        stage(&apos;Build Code&apos;) {
+            steps{
+                container(&apos;mvn&apos;){
+                    echo &apos;Code Building...&apos;
+                    script {
+                        sh &apos;mvn -v&apos;
+                    }
+                    //sleep 20    
+                }
+            }
+        }
+        stage(&apos;Build Image&apos;){
+            steps{
+                container(&apos;docker&apos;){
+                    echo &apos;Image Building...&apos;
+                    script{
+                        sh &apos;docker&apos;
+                    }
+                    //sleep 20
+                }
+            }
+        }
+        stage(&apos;Push Image to Repo&apos;){
+            steps{
+                container(&apos;docker&apos;){
+                    echo &apos;Pushing Image...&apos;
+                    script{
+                        sh &apos;docker&apos;
+                    }
+                    //sleep 20
+                }
+            }
+        }
+        stage(&apos;Deploy to Staging&apos;){
+            steps{
+                container(&apos;kubectl&apos;){
+                    echo &apos;Deployment canary build...&apos;
+                    script{
+                        if (params.BUILD == &quot;One&quot;) {
+                            sh &apos;ls $WORKSPACE&apos;
+                            sh &apos;kubectl apply -f $WORKSPACE/manifests/sockshop-app/dev/carts2.yml&apos;
+                            echo &quot;Waiting for carts service to start...&quot;
+                            sleep 350
+                        } else {
+                            sh &apos;ls $WORKSPACE&apos;
+                            sh &apos;kubectl apply -f $WORKSPACE/manifests/sockshop-app/canary/carts2-canary.yml&apos;
+                            echo &quot;Waiting for carts service to start...&quot;
+                            sleep 350
+                        }
+                    }
+                }
+            }
+        }
+        stage (&apos;Run Load Test&apos;){
+            steps{
+                container(&apos;kubectl&apos;){
+                    echo &apos;Get Carts URL&apos;
+                    script{
+                        dir(&quot;loadtest&quot;){
+                            sh &quot;chmod +x cartstest.sh&quot;
+                            sh &quot;./cartstest.sh&quot;
+                            
+                        }
+                    }
+                }
+                /*container(&apos;curl&apos;){
+                    script{
+                        dir(&quot;loadtest&quot;){
+                            sh &quot;chmod +x loadtest.sh&quot;
+                            sh &quot;./loadtest.sh&quot;
+                        }
+                    }
+                }*/
+                container(&apos;jmeter&apos;){
+                    script{
+                        if (params.BUILD == &quot;One&quot;){
+                            dir(&quot;loadtest&quot;){
+                                sh &quot;jmeter -n -t carts_load1.jmx -l testresults.jtl&quot;
+                            }   
+                        } else {
+                            dir(&quot;loadtest&quot;){
+                                sh &quot;jmeter -n -t carts_load2.jmx -l testresults.jtl&quot;
+                            } 
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
