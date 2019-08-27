@@ -1,9 +1,9 @@
 #!/bin/bash
-kubectl create -f ./manifests/jenkins/k8s-jenkins-ns.yaml
-kubectl create -f ./manifests/jenkins/k8s-jenkins-pvcs.yaml
-kubectl create -f ./manifests/jenkins/k8s-jenkins-deployment.yaml
-kubectl create -f ./manifests/jenkins/k8s-jenkins-rbac.yaml
-kubectl create -f ./manifests/jenkins/k8s-jenkins-secret.yaml
+kubectl create -f ../manifests/jenkins/k8s-jenkins-ns.yaml
+kubectl create -f ../manifests/jenkins/k8s-jenkins-pvcs.yaml
+kubectl create -f ../manifests/jenkins/k8s-jenkins-deployment.yaml
+kubectl create -f ../manifests/jenkins/k8s-jenkins-rbac.yaml
+kubectl create -f ../manifests/jenkins/k8s-jenkins-secret.yaml
 
 echo "Waiting for Jenkins to start..."
 

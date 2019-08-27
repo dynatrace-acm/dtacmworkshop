@@ -60,10 +60,10 @@ kubectl create -f cr.yaml
 
 echo "Waiting for OneAgent to startup..."
 
-sleep 2m
+sleep 120
 
 echo "Deploying SockShop Application"
 
-./deploy-sockshop.sh
+../utils/deploy-sockshop.sh
 
 echo "Deployment Complete"
