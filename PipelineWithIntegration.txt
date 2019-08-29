@@ -1,0 +1,108 @@
+pipeline{
+    agent {
+        label 'jenkins-slave'
+    }
+    parameters {
+        choice(name: 'BUILD', choices: ['One', 'Two'], description: 'Choose Build')
+    }
+
+    stages{
+        stage('Checkout code'){
+            steps{
+                git 'https://github.com/dynatrace-acm/dtacmworkshop'
+            }
+        }
+        stage('Build Code') {
+            steps{
+                container('mvn'){
+                    echo 'Code Building...'
+                    script {
+                        sh 'mvn -v'
+                    }
+                    //sleep 20    
+                }
+            }
+        }
+        stage('Build Image'){
+            steps{
+                container('docker'){
+                    echo 'Image Building...'
+                    script{
+                        sh 'docker'
+                    }
+                    //sleep 20
+                }
+            }
+        }
+        stage('Push Image to Repo'){
+            steps{
+                container('docker'){
+                    echo 'Pushing Image...'
+                    script{
+                        sh 'docker'
+                    }
+                    //sleep 20
+                }
+            }
+        }
+        stage('Deploy to Staging'){
+            steps{
+                container('kubectl'){
+                    echo 'Deployment canary build...'
+                    createDynatraceDeploymentEvent(envId: 'Dynatrace Server', tagMatchRules: [[meTypes: [[meType: 'SERVICE']], tags: [[context: 'CONTEXTLESS', key: 'app', value: 'carts'], [context: 'CONTEXTLESS', key: 'environment', value: 'dev']]]]) {
+                    // some block
+                    }
+                    script{
+                        if (params.BUILD == "One") {
+                            sh 'ls $WORKSPACE'
+                            sh 'kubectl apply -f $WORKSPACE/manifests/sockshop-app/dev/carts2.yml'
+                            echo "Waiting for carts service to start..."
+                            sleep 350
+                        } else {
+                            sh 'ls $WORKSPACE'
+                            sh 'kubectl apply -f $WORKSPACE/manifests/sockshop-app/canary/carts2-canary.yml'
+                            echo "Waiting for carts service to start..."
+                            sleep 350
+                        }
+                    }
+                }
+            }
+        }
+        stage ('Run Load Test'){
+            steps{
+                container('kubectl'){
+                    echo 'Get Carts URL'
+                    script{
+                        dir("loadtest"){
+                            sh "chmod +x cartstest.sh"
+                            sh "./cartstest.sh"
+                            
+                        }
+                    }
+                }
+                container('jmeter'){
+                    script{
+                        recordDynatraceSession(envId: 'Dynatrace Server', tagMatchRules: [[meTypes: [[meType: 'SERVICE']], tags: [[context: 'CONTEXTLESS', key: 'app', value: 'carts'], [context: 'CONTEXTLESS', key: 'environment', value: 'dev']]]], testCase: 'loadtest') {
+
+                        if (params.BUILD == "One"){
+                            dir("loadtest"){
+                                sh "jmeter -n -t carts_load1.jmx -l testresults.jtl"
+                            }   
+                        } else {
+                            dir("loadtest"){
+                                sh "jmeter -n -t carts_load2.jmx -l testresults.jtl"
+                            } 
+                        }
+
+                        }
+                    }
+                }
+            }
+        }
+        stage ('Dynatrace Quality Gate'){
+            steps{
+              perfSigDynatraceReports envId: 'Dynatrace Server', nonFunctionalFailure: 2, specFile: 'monspec.json'  
+            }
+        }
+    }
+}
