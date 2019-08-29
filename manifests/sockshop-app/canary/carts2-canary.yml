@@ -10,9 +10,8 @@ spec:
     metadata:
       annotations:
         sidecar.istio.io/inject: "false"
-        dynatrace/instrument: "false"
         pipeline.stage: dev
-        pipeline.build: 2.3.0.2981
+        pipeline.build: 2.4.0.3057
         pipeline.project: sockshop
         support.contact: "john.doe@sockshop.com"
         support.channel: "#support-sockshop-services"
@@ -20,7 +19,7 @@ spec:
         app: carts
         stage: dev
         release: stable
-        version: "2.3"
+        version: "2.4"
         tier: "business"
         product: "sockshop"
     spec:

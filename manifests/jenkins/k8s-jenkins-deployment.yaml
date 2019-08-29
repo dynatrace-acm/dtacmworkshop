@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - name: jenkins
-        image: wmsegar/jenkins:3.0
+        image: wmsegar/jenkins:4.0
         imagePullPolicy: Always
         env:
           - name: GITHUB_USER_EMAIL

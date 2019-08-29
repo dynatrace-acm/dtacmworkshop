@@ -16,4 +16,7 @@ kubectl apply -f ../manifests/backend-services/orders-db/
 
 kubectl apply -f ../manifests/sockshop-app/dev/
 
+#Create ClusterRoleBinding View to pull labels and annotations for dev namespace
+kubectl -n dev create rolebinding default-view --clusterrole=view --serviceaccount=dev:default
+
 
