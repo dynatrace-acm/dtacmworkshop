@@ -22,6 +22,8 @@ echo "ENVIRONMENTID = $ENVIRONMENTID"
 
 read -p "Is this all correct? (y/n) : " -n 1 -r
 
+echo ""
+
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Creating GKE Cluster..."
     gcloud container clusters create acmworkshop --zone=us-central1-a --num-nodes=1 --machine-type=n1-highmem-2 --image-type=Ubuntu

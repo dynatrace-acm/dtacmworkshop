@@ -3,7 +3,7 @@
 	"timeseries": [{
 			"timeseriesId": "com.dynatrace.builtin:service.responsetime",
 			"aggregation": "avg",
-			"tags": "app:carts,environment:dev",
+			"tags": "[Kubernetes]app:carts,[Kubernetes]stage:dev",
 			"upperWarning": 1000,
 			"upperSevere": 3000
 		}
