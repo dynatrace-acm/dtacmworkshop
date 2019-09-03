@@ -19,7 +19,7 @@ spec:
         app: carts
         stage: dev
         release: stable
-        version: "2.4"
+        version: "2.3"
         tier: "business"
         product: "sockshop"
     spec:
