@@ -63,3 +63,53 @@ export INVENTORY_ID=$(curl -k -X POST https://$TOWER_URL/api/v1/inventories/ --u
   "variables": "---\ntenanturl: \"'$DT_TENANT_URL'\"\ncarts_promotion_url: \"http://'$CART_URL'/carts/1/items/promotion\"\ncommentuser: \"Ansible Playbook\"\ntower_user: \"admin\"\ntower_password: \"dynatrace\"\ndtcommentapiurl: \"{{tenanturl}}/api/v1/problem/details/{{pid}}/comments?Api-Token={{DYNATRACE_API_TOKEN}}\"\ndteventapiurl: \"{{tenanturl}}/api/v1/events/?Api-Token={{DYNATRACE_API_TOKEN}}\""
 }' | jq -r '.id')
 echo "INVENTORY_ID: " $INVENTORY_ID
+
+export REMEDIATION_TEMPLATE_ID=$(curl -k -X POST https://$TOWER_URL/api/v1/job_templates/ --user admin:dynatrace -H "Content-Type: application/json" \
+--data '{
+  "name": "remediation",
+  "job_type": "run",
+  "inventory": '$INVENTORY_ID',
+  "project": '$PROJECT_ID',
+  "playbook": "playbooks/remediation.yaml",
+  "ask_variables_on_launch": true
+}' | jq -r '.id')
+echo "REMEDIATION_TEMPLATE_ID: " $REMEDIATION_TEMPLATE_ID
+
+export STOP_CAMPAIGN_ID=$(($REMEDIATION_TEMPLATE_ID + 1))
+
+export STOP_CAMPAIGN_ID=$(curl -k -X POST https://$TOWER_URL/api/v1/job_templates/ --user admin:dynatrace -H "Content-Type: application/json" \
+--data '{
+  "name": "stop-campaign",
+  "job_type": "run",
+  "inventory": '$INVENTORY_ID',
+  "project": '$PROJECT_ID',
+  "playbook": "playbooks/campaign.yaml",
+  "extra_vars": "---\npromotion_rate: \"0\"\nremediation_action: \"https://'$TOWER_URL'/api/v2/job_templates/'$STOP_CAMPAIGN_ID'/launch/\"\ndt_application: \"carts\"\ndt_environment: \"production\""
+}' | jq -r '.id')
+echo "STOP_CAMPAIGN_ID: " $STOP_CAMPAIGN_ID
+
+export START_CAMPAIGN_ID=$(curl -k -X POST https://$TOWER_URL/api/v1/job_templates/ --user admin:dynatrace -H "Content-Type: application/json" \
+--data '{
+  "name": "start-campaign",
+  "job_type": "run",
+  "inventory": '$INVENTORY_ID',
+  "project": '$PROJECT_ID',
+  "playbook": "playbooks/campaign.yaml",
+  "extra_vars": "---\npromotion_rate: \"0\"\nremediation_action: \"https://'$TOWER_URL'/api/v2/job_templates/'$STOP_CAMPAIGN_ID'/launch/\"\ndt_application: \"carts\"\ndt_environment: \"production\"",
+  "ask_variables_on_launch": true
+}' | jq -r '.id')
+echo "START_CAMPAIGN_ID: " $START_CAMPAIGN_ID
+
+#Assign DT API credential to all jobs
+declare -a job_templates=($REMEDIATION_TEMPLATE_ID $STOP_CAMPAIGN_ID $START_CAMPAIGN_ID $CANARY_RESET_ID $CANARY_ID)
+
+for template in "${job_templates[@]}"
+do
+  curl -k -X POST https://$TOWER_URL/api/v2/job_templates/$template/credentials/ --user admin:dynatrace -H "Content-Type: application/json" \
+  --data '{
+    "id": '$DTCRED'
+  }'
+done
+
+echo "Ansible has been configured successfully! Copy the following URL to set it as an Ansible Job URL in the Dynatrace notification settings:"
+echo "https://$TOWER_URL/#templates/job_template/$REMEDIATION_TEMPLATE_ID"
