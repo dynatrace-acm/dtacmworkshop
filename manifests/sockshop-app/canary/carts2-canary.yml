@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: carts
-        image: wmsegar/carts:canary30
+        image: wmsegar/carts:3.0
         env:
         - name: JAVA_OPTS
           value: -Xms128m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom
