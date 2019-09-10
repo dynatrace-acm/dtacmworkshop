@@ -21,12 +21,12 @@
               "tagRule" : [{
                   "meTypes" : ["SERVICE"],
                   "tags" : [ {
-                    "context" : "CONTEXTLESS",
-                    "key" : "service",
+                    "context" : "KUBERNETES",
+                    "key" : "app",
                     "value" : "{{dt_app}}"            
                   }, {
-                    "context" : "CONTEXTLESS",
-                    "key" : "environment",
+                    "context" : "KUBERNETES",
+                    "key" : "stage",
                     "value" : "{{dt_env}}" 
                   }
                   ]
