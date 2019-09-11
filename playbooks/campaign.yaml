@@ -4,10 +4,6 @@
     dt_app: "{{ dt_application }}"
     dt_env: "{{ dt_environment }}"
   gather_facts: False
-  pre_tasks:
-    -setup:
-      gather_subset: '!all'
-      gather_timeout: 300
 
   tasks:
   - name: update percentage of promotion for {{dt_app}} service
