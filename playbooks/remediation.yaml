@@ -8,6 +8,8 @@
     -setup:
       gather_subset: '!all'
       gather_timeout: 300
+- debug:
+    msg:"Hello There!!!"
 
   tasks:
     - name: push comment to dynatrace
