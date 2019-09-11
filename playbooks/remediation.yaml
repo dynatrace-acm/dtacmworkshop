@@ -4,10 +4,6 @@
   vars:
     relative_time: "hour"
   gather_facts: False
-  pre_tasks:
-    -setup:
-      gather_subset: '!all'
-      gather_timeout: 300
 
   tasks:
     - name: push comment to dynatrace
