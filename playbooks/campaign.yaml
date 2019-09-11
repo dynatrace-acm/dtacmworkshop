@@ -3,14 +3,13 @@
   vars:
     dt_app: "{{ dt_application }}"
     dt_env: "{{ dt_environment }}"
+  gather_facts: False
+  pre_tasks:
+    -setup:
+      gather_subset: '!all'
+      gather_timeout: 300
 
   tasks:
-  - name: Collect only facts returned by facter
-    setup:
-      gather_subset:
-        - '!all'
-      gather_timeout:
-        - 300
   - name: update percentage of promotion for {{dt_app}} service
     uri:
       url: "{{carts_promotion_url}}/{{promotion_rate}}"
