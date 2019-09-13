@@ -53,3 +53,59 @@ spec:
     targetPort: 3306
   selector:
     name: catalogue-db
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: catalogue-db
+  labels:
+    name: catalogue-db
+  namespace: production
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+        dynatrace/instrument: "false"
+        pipeline.stage: prod-stable
+        pipeline.build: 1.4.3.0054
+        pipeline.project: sockshop
+        support.contact: "mary.poppins@sockshop.com"
+        support.channel: "#support-sockshop-data"
+      labels:
+        name: catalogue-db
+        stage: prod
+        version: "1.4"
+        tier: data
+        product: sockshop
+    spec:
+      containers:
+      - name: catalogue-db
+        image: dynatracesockshop/catalogue-db
+        securityContext:
+          privileged: true
+          runAsUser: 0
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: fake_password
+          - name: MYSQL_DATABASE
+            value: socksdb
+        ports:
+        - name: mysql
+          containerPort: 3306
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalogue-db
+  labels:
+    name: catalogue-db
+  namespace: production
+spec:
+  ports:
+  - port: 3306
+    targetPort: 3306
+  selector:
+    name: catalogue-db

@@ -74,3 +74,80 @@ spec:
     targetPort: 27017
   selector:
     name: carts-db
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: carts-db-mongodata
+  namespace: production
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: carts-db
+  namespace: production
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+        dynatrace/instrument: "false"
+        pipeline.stage: prod-stable
+        pipeline.build: 1.2.0.2644
+        pipeline.project: sockshop
+        support.contact: "mary.poppins@sockshop.com"
+        support.channel: "#support-sockshop-data"
+      labels:
+        name: carts-db
+        stage: prod
+        release: stable
+        version: "1.2"
+        tier: data
+        product: sockshop
+    spec:
+      containers:
+      - image: mongo
+        name: carts-db
+        env:
+        - name: MONGODB_ADMIN_PASSWORD
+          value: "password"
+        - name: MONGODB_USER
+          value: "user"
+        - name: MONGODB_PASSWORD
+          value: "password"
+        - name: MONGODB_DATABASE
+          value: "carts-db"
+        ports:
+        - containerPort: 27017
+        resources: {}
+        volumeMounts:
+        - mountPath: /data/db
+          name: carts-db-mongodata
+      restartPolicy: Always
+      volumes:
+      - name: carts-db-mongodata
+        persistentVolumeClaim:
+          claimName: carts-db-mongodata
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: carts-db
+  namespace: production
+spec:
+  ports:
+  - name: "27017"
+    port: 27017
+    targetPort: 27017
+  selector:
+    name: carts-db

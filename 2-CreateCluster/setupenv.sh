@@ -26,7 +26,7 @@ echo ""
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Creating GKE Cluster..."
-    gcloud container clusters create acmworkshop --zone=us-central1-a --num-nodes=1 --machine-type=n1-highmem-2 --image-type=Ubuntu
+    gcloud container clusters create acmworkshop --zone=us-central1-a --num-nodes=3 --machine-type=n1-highmem-2 --image-type=Ubuntu
 else
     exit 1
 fi

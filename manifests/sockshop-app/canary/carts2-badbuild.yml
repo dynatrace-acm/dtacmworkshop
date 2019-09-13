@@ -1,0 +1,73 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: carts
+  namespace: production
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+        dynatrace/instrument: "true"
+        pipeline.stage: prod-stable
+        pipeline.build: 2.3.1.3476
+        pipeline.project: sockshop
+        support.contact: "john.doe@sockshop.com"
+        support.channel: "#support-sockshop-services"
+      labels:
+        app: carts
+        stage: prod
+        release: stable
+        version: "2.3"
+        tier: "business"
+        product: "sockshop"
+    spec:
+      containers:
+      - name: carts
+        image: wmsegar/carts:3.0
+        env:
+        - name: JAVA_OPTS
+          value: -Xms128m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
+        livenessProbe:
+          httpGet:
+            path: /carts/1/items/health
+            port: 8080
+          initialDelaySeconds: 240
+          periodSeconds: 10
+          timeoutSeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /carts/1/items/health
+            port: 8080
+          initialDelaySeconds: 240
+          periodSeconds: 10
+          timeoutSeconds: 15
+      volumes:
+        - name: tmp-volume
+          emptyDir:
+            medium: Memory
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: carts
+  labels:
+    app: carts
+  namespace: production
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+  selector:
+    app: carts
+  type: LoadBalancer
