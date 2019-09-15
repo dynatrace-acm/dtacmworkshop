@@ -75,4 +75,7 @@ echo "Deploying SockShop Application"
 
 ../utils/deploy-sockshop.sh
 
+echo "Start Production Load"
+nohup ../utils/cartsLoadTest.sh &
+
 echo "Deployment Complete"
