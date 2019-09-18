@@ -41,7 +41,7 @@
     stages{
         stage(&apos;Checkout code&apos;){
             steps{
-                git &apos;https://github.com/dynatrace-acm/dtacmworkshop.git&apos;
+                git branch: &apos;tower&apos;, url: &apos;https://github.com/dynatrace-acm/dtacmworkshop.git&apos;
             }
         }
         stage(&apos;Build Code&apos;) {
