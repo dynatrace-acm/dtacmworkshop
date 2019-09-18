@@ -5,7 +5,7 @@ export JENKINS_USERNAME_DECODE=$(echo $JENKINS_USERNAME | base64 --decode)
 export JENKINS_PASSWORD=$(kubectl get secret jenkins-secret -n cicd -o yaml | grep "password:" | sed 's~password:[ \t]*~~')
 export JENKINS_PASSWORD_DECODE=$(echo $JENKINS_PASSWORD | base64 --decode)
 
-export CART_URL=$(kubectl describe svc carts -n dev | grep "LoadBalancer Ingress:" | sed 's/LoadBalancer Ingress:[ \t]*//')
+export CART_URL=$(kubectl describe svc carts -n production | grep "LoadBalancer Ingress:" | sed 's/LoadBalancer Ingress:[ \t]*//')
 
 export DT_TENANT_ID=$(cat ../1-Credentials/creds.json | jq -r '.dynatraceTenantID')
 export DT_ENVIRONMENT_ID=$(cat ../1-Credentials/creds.json | jq -r '.dynatraceEnvironmentID')
@@ -84,7 +84,7 @@ export STOP_CAMPAIGN_ID=$(curl -k -X POST https://$TOWER_URL/api/v1/job_template
   "inventory": '$INVENTORY_ID',
   "project": '$PROJECT_ID',
   "playbook": "playbooks/campaign.yaml",
-  "extra_vars": "---\npromotion_rate: \"0\"\nremediation_action: \"https://'$TOWER_URL'/api/v2/job_templates/'$STOP_CAMPAIGN_ID'/launch/\"\ndt_application: \"carts\"\ndt_environment: \"dev\""
+  "extra_vars": "---\npromotion_rate: \"0\"\nremediation_action: \"https://'$TOWER_URL'/api/v2/job_templates/'$STOP_CAMPAIGN_ID'/launch/\"\ndt_application: \"carts\"\ndt_environment: \"prod\""
 }' | jq -r '.id')
 echo "STOP_CAMPAIGN_ID: " $STOP_CAMPAIGN_ID
 
@@ -95,7 +95,7 @@ export START_CAMPAIGN_ID=$(curl -k -X POST https://$TOWER_URL/api/v1/job_templat
   "inventory": '$INVENTORY_ID',
   "project": '$PROJECT_ID',
   "playbook": "playbooks/campaign.yaml",
-  "extra_vars": "---\npromotion_rate: \"50\"\nremediation_action: \"https://'$TOWER_URL'/api/v2/job_templates/'$STOP_CAMPAIGN_ID'/launch/\"\ndt_application: \"carts\"\ndt_environment: \"dev\"",
+  "extra_vars": "---\npromotion_rate: \"50\"\nremediation_action: \"https://'$TOWER_URL'/api/v2/job_templates/'$STOP_CAMPAIGN_ID'/launch/\"\ndt_application: \"carts\"\ndt_environment: \"prod\"",
   "ask_variables_on_launch": true
 }' | jq -r '.id')
 echo "START_CAMPAIGN_ID: " $START_CAMPAIGN_ID
