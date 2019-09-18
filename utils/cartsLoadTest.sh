@@ -1,12 +1,12 @@
 #!/bin/bash
 
-export CARTS_PODS_AVAILABLE=0
+export CARTS_PODS_AVAILABLE
 
-while [ $CARTS_PODS_AVAILABLE -lt 1 ]
+while [ -z "$CARTS_PODS_AVAILABLE" ]
 do
     CARTS_PODS_AVAILABLE=$(kubectl get deployments/carts -n production -o json | jq '.status.readyReplicas')
     
-    if [ $CARTS_PODS_AVAILABLE -lt 1 ]
+    if [ -z "$CARTS_PODS_AVAILABLE" ]
     then
         sleep 30
     fi
