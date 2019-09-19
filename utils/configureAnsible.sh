@@ -111,5 +111,7 @@ do
   }'
 done
 
+echo "----------------------------------------------------"
 echo "Ansible has been configured successfully! Copy the following URL to set it as an Ansible Job URL in the Dynatrace notification settings:"
 echo "https://$TOWER_URL/#/templates/job_template/$REMEDIATION_TEMPLATE_ID"
+echo "----------------------------------------------------"
