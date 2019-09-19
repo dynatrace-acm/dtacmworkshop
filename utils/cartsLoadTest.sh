@@ -1,17 +1,23 @@
 #!/bin/bash
 
-export CARTS_PODS_AVAILABLE
+export CARTS_PODS_AVAILABLE=$(kubectl get deployments/carts -n production -o json | jq '.status.readyReplicas')
 
-while [ -z "$CARTS_PODS_AVAILABLE" ]
+while [ -z "$CARTS_PODS_AVAILABLE" ] || [ "$CARTS_PODS_AVAILABLE" == null ]
 do
-    CARTS_PODS_AVAILABLE=$(kubectl get deployments/carts -n production -o json | jq '.status.readyReplicas')
-    
-    if [ -z "$CARTS_PODS_AVAILABLE" ]
-    then
-        sleep 30
-    fi
+    echo "The value of carts pods is " $CARTS_PODS_AVAILABLE
 
-    echo $CARTS_PODS_AVAILABLE
+    echo "sleeping 30 seconds"
+    sleep 30
+    CARTS_PODS_AVAILABLE=$(kubectl get deployments/carts -n production -o json | jq '.status.readyReplicas')
+
+    if [ "$CARTS_PODS_AVAILABLE" -eq 1 ]
+    then
+        echo $CARTS_PODS_AVAILABLE
+        echo "Beginning Load Test"
+    else
+        echo $CARTS_PODS_AVAILABLE
+        echo "Checking again"
+    fi
 done
 
 export CARTS_URL=$(kubectl describe svc carts -n production | grep "LoadBalancer Ingress:" | sed 's/LoadBalancer Ingress:[ \t]*//')
