@@ -19,15 +19,17 @@
         <hudson.model.ChoiceParameterDefinition>
           <name>BUILD</name>
           <description>Choose Build</description>
-          <choices>
-            <string>One</string>
-            <string>Two</string>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>One</string>
+              <string>Two</string>
+            </a>
           </choices>
         </hudson.model.ChoiceParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
   </properties>
-  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.72">
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.73">
     <script>pipeline{
     agent {
         label &apos;jenkins-slave&apos;
@@ -39,7 +41,7 @@
     stages{
         stage(&apos;Checkout code&apos;){
             steps{
-                git &apos;https://github.com/dynatrace-acm/dtacmworkshop.git&apos;
+                git branch: &apos;tower&apos;, url: &apos;https://github.com/dynatrace-acm/dtacmworkshop.git&apos;
             }
         }
         stage(&apos;Build Code&apos;) {
@@ -127,6 +129,26 @@
                             } 
                         }
                         
+                    }
+                }
+            }
+        }
+        stage (&apos;Deploy to Production&apos;){
+            steps{
+                container(&apos;kubectl&apos;){
+                    echo &apos;Deploying to Production&apos;
+                    script{
+                        if (params.BUILD == &quot;One&quot;) {
+                            sh &apos;ls $WORKSPACE&apos;
+                            sh &apos;kubectl apply -f $WORKSPACE/manifests/sockshop-app/production/carts2.yml&apos;
+                            echo &quot;Waiting for carts service to start...&quot;
+                            sleep 350
+                        } else {
+                            sh &apos;ls $WORKSPACE&apos;
+                            sh &apos;kubectl apply -f $WORKSPACE/manifests/sockshop-app/canary/carts2-badbuild.yml&apos;
+                            echo &quot;Waiting for carts service to start...&quot;
+                            sleep 350
+                        }
                     }
                 }
             }

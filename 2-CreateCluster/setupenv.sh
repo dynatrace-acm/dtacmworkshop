@@ -38,7 +38,8 @@ usage()
 deployGKE()
 {
     echo "Creating GKE Cluster..."
-    gcloud container clusters create acmworkshop --zone=us-central1-a --num-nodes=1 --machine-type=n1-highmem-2 --image-type=Ubuntu
+
+    gcloud container clusters create acmworkshop --zone=us-central1-a --num-nodes=3 --machine-type=n1-highmem-2 --image-type=Ubuntu
 
     kubectl create clusterrolebinding cluster-admin-binding --clusterrole=cluster-admin --user=$(gcloud config get-value account)
 }
@@ -114,6 +115,11 @@ sleep 120
 
 echo "Deploying SockShop Application"
 ../utils/deploy-sockshop.sh
+
+sleep 120
+
+echo "Start Production Load"
+nohup ../utils/cartsLoadTest.sh &
 
 echo "Deployment Complete"
 
