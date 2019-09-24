@@ -47,7 +47,7 @@ export PROJECT_ID=$(curl -k -X POST https://$TOWER_URL/api/v1/projects/ --user a
   "name": "self-healing",
   "scm_type": "git",
   "scm_url": "https://github.com/dynatrace-acm/dtacmworkshop.git",
-  "scm_branch": "tower",
+  "scm_branch": "master",
   "scm_clean": "true"
 }' | jq -r '.id')
 echo "PROJECT_ID: " $PROJECT_ID
