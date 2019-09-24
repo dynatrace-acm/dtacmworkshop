@@ -104,5 +104,25 @@ pipeline{
               perfSigDynatraceReports envId: 'Dynatrace Server', nonFunctionalFailure: 2, specFile: 'monspec.json'  
             }
         }
+        stage ('Deploy to Production'){
+            steps{
+                container('kubectl'){
+                    echo 'Deploying to Production'
+                    script{
+                        if (params.BUILD == "One") {
+                            sh 'ls $WORKSPACE'
+                            sh 'kubectl apply -f $WORKSPACE/manifests/sockshop-app/production/carts2.yml'
+                            echo "Waiting for carts service to start..."
+                            sleep 350
+                        } else {
+                            sh 'ls $WORKSPACE'
+                            sh 'kubectl apply -f $WORKSPACE/manifests/sockshop-app/canary/carts2-badbuild.yml'
+                            echo "Waiting for carts service to start..."
+                            sleep 350
+                        }
+                    }
+                }
+            }
+        }
     }
 }
