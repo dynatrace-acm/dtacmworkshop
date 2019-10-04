@@ -49,20 +49,22 @@ pipeline{
             steps{
                 container('kubectl'){
                     echo 'Deployment canary build...'
-                    createDynatraceDeploymentEvent(envId: 'Dynatrace Server', tagMatchRules: [[meTypes: [[meType: 'SERVICE']], tags: [[context: 'KUBERNETES', key: 'app', value: 'carts'], [context: 'KUBERNETES', key: 'stage', value: 'dev']]]]) {
-                    // some block
-                    }
-                    script{
-                        if (params.BUILD == "One") {
-                            sh 'ls $WORKSPACE'
-                            sh 'kubectl apply -f $WORKSPACE/manifests/sockshop-app/dev/carts2.yml'
-                            echo "Waiting for carts service to start..."
-                            sleep 350
-                        } else {
-                            sh 'ls $WORKSPACE'
-                            sh 'kubectl apply -f $WORKSPACE/manifests/sockshop-app/canary/carts2-canary.yml'
-                            echo "Waiting for carts service to start..."
-                            sleep 350
+                    createDynatraceDeploymentEvent(envId: 'Dynatrace Server', 
+                                                    tagMatchRules: [[meTypes: [[meType: 'SERVICE']], 
+                                                    tags: [[context: 'KUBERNETES', key: 'app', value: 'carts'], 
+                                                            [context: 'KUBERNETES', key: 'stage', value: 'dev']]]]) {
+                        script{
+                            if (params.BUILD == "One") {
+                                sh 'ls $WORKSPACE'
+                                sh 'kubectl apply -f $WORKSPACE/manifests/sockshop-app/dev/carts2.yml'
+                                echo "Waiting for carts service to start..."
+                                sleep 350
+                            } else {
+                                sh 'ls $WORKSPACE'
+                                sh 'kubectl apply -f $WORKSPACE/manifests/sockshop-app/canary/carts2-canary.yml'
+                                echo "Waiting for carts service to start..."
+                                sleep 350
+                            }
                         }
                     }
                 }
@@ -83,16 +85,15 @@ pipeline{
                 container('jmeter'){
                     script{
                         recordDynatraceSession(envId: 'Dynatrace Server', tagMatchRules: [[meTypes: [[meType: 'SERVICE']], tags: [[context: 'KUBERNETES', key: 'app', value: 'carts'], [context: 'KUBERNETES', key: 'stage', value: 'dev']]]], testCase: 'loadtest') {
-
-                        if (params.BUILD == "One"){
-                            dir("loadtest"){
-                                sh "jmeter -n -t carts_load1.jmx -l testresults.jtl"
-                            }   
-                        } else {
-                            dir("loadtest"){
-                                sh "jmeter -n -t carts_load2.jmx -l testresults.jtl"
-                            } 
-                        }
+                            if (params.BUILD == "One"){
+                                dir("loadtest"){
+                                    sh "jmeter -n -t carts_load1.jmx -l testresults.jtl"
+                                }   
+                            } else {
+                                dir("loadtest"){
+                                    sh "jmeter -n -t carts_load2.jmx -l testresults.jtl"
+                                } 
+                            }
 
                         }
                     }
@@ -108,19 +109,24 @@ pipeline{
             steps{
                 container('kubectl'){
                     echo 'Deploying to Production'
-                    script{
-                        if (params.BUILD == "One") {
-                            sh 'ls $WORKSPACE'
-                            sh 'kubectl apply -f $WORKSPACE/manifests/sockshop-app/production/carts2.yml'
-                            echo "Waiting for carts service to start..."
-                            sleep 350
-                        } else {
-                            sh 'ls $WORKSPACE'
-                            sh 'kubectl apply -f $WORKSPACE/manifests/sockshop-app/canary/carts2-badbuild.yml'
-                            echo "Waiting for carts service to start..."
-                            sleep 350
+                    createDynatraceDeploymentEvent(envId: 'Dynatrace Server', 
+                                tagMatchRules: [[meTypes: [[meType: 'SERVICE']], 
+                                tags: [[context: 'KUBERNETES', key: 'app', value: 'carts'], 
+                                        [context: 'KUBERNETES', key: 'stage', value: 'prod']]]]) {
+                        script{
+                            if (params.BUILD == "One") {
+                                sh 'ls $WORKSPACE'
+                                sh 'kubectl apply -f $WORKSPACE/manifests/sockshop-app/production/carts2.yml'
+                                echo "Waiting for carts service to start..."
+                                sleep 350
+                            } else {
+                                sh 'ls $WORKSPACE'
+                                sh 'kubectl apply -f $WORKSPACE/manifests/sockshop-app/canary/carts2-badbuild.yml'
+                                echo "Waiting for carts service to start..."
+                                sleep 350
+                            }
                         }
-                    }
+                                        }
                 }
             }
         }
