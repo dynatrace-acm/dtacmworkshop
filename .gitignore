@@ -1,3 +1,4 @@
 cr.yaml
 1-Credentials/creds.json
 *.out
+*/Dynatrace-ActiveGate-Linux.sh

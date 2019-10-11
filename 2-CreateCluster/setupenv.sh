@@ -37,6 +37,10 @@ usage()
 
 deployGKE()
 {
+    echo ""
+    echo "Creating ActiveGate VM..."
+    gcloud compute instances create dtactivegate --zone=us-central1-a --machine-type=n1-standard-2 --metadata=tenant_id=$TENANTID,environment_id=$ENVIRONMENTID,paas_token=$PAAS_TOKEN --metadata-from-file startup-script=../utils/deployagsoftware.sh --image=debian-9-stretch-v20190916 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=dtactivegate --reservation-affinity=any
+
     echo "Creating GKE Cluster..."
 
     gcloud container clusters create acmworkshop --zone=us-central1-a --num-nodes=3 --machine-type=n1-highmem-2 --image-type=Ubuntu
@@ -92,6 +96,26 @@ sleep 120
 echo "Start Production Load"
 nohup ../utils/cartsLoadTest.sh &
 
-echo "Deployment Complete"
+case $CLOUD_PROVIDER in
+        GKE)
+        echo "Configuring ActiveGate K8s.."
+        ../utils/configureag.sh
+        echo "-----------------------"
+        echo "Deployment Complete"
+        echo "-----------------------"
+        ;;
+        AKS)
+        echo "-----------------------"
+        echo "Deployment Complete"
+        echo "-----------------------"
+        ;;
+        *)
+        echo "-----------------------"
+        echo "Deployment Complete"
+        echo "-----------------------"
+        ;;
+    esac
+
+
 
 
