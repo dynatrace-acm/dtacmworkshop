@@ -114,19 +114,19 @@ pipeline{
                                 tags: [[context: 'KUBERNETES', key: 'app', value: 'carts'], 
                                         [context: 'KUBERNETES', key: 'stage', value: 'prod']]]]) {
                         script{
-                            if (params.BUILD == "One") {
-                                sh 'ls $WORKSPACE'
-                                sh 'kubectl apply -f $WORKSPACE/manifests/sockshop-app/production/carts2.yml'
-                                echo "Waiting for carts service to start..."
-                                sleep 350
+                            if (params.BUILD == &quot;One&quot;) {
+                                sh &apos;ls $WORKSPACE&apos;
+                                sh &apos;kubectl apply -f $WORKSPACE/manifests/sockshop-app/production/carts2.yml&apos;
+                                echo &quot;Waiting for carts deployment to complete rollout...&quot;
+                                sleep 300
                             } else {
-                                sh 'ls $WORKSPACE'
-                                sh 'kubectl apply -f $WORKSPACE/manifests/sockshop-app/canary/carts2-badbuild.yml'
-                                echo "Waiting for carts service to start..."
-                                sleep 350
+                                sh &apos;ls $WORKSPACE&apos;
+                                sh &apos;kubectl set image deployment/carts carts=wmsegar/carts:3.0 --record -n production&apos;
+                                echo &quot;Waiting for carts deployment to complete rollout...&quot;
+                                sleep 300
                             }
                         }
-                                        }
+                    }
                 }
             }
         }
