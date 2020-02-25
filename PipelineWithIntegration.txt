@@ -9,7 +9,7 @@ pipeline{
     stages{
         stage('Checkout code'){
             steps{
-                git 'https://github.com/dynatrace-acm/dtacmworkshop'
+                git branch: 'v2.2', url: 'https://github.com/dynatrace-acm/dtacmworkshop.git'
             }
         }
         stage('Build Code') {
