@@ -11,7 +11,7 @@ SOCKSHOP_WEBAPP_CONFIG=$(cat ../dynatrace-config/sockshop_webapp_template.json |
 AUTOTAG_PRODUCT_CONFIG=$(cat ../dynatrace-config/tagging_rule_product.json)
 AUTOTAG_STAGE_CONFIG=$(cat ../dynatrace-config/tagging_rule_stage.json)
 SERVICES_ANOMALY_DETECTION_CONFIG=$(cat ../dynatrace-config/services_anomaly_detection_rules.json)
-TEST_MAINTENANCE_WINDOW=$(cat ../dynatrace-config/test_maintenance_window.json)
+
 
 RESPONSE=$(curl -X POST -H "Content-Type: application/json" -H "Authorization: Api-Token $DT_CONFIG_TOKEN" -d "$AUTOTAG_PRODUCT_CONFIG" $DT_API_URL/config/v1/autoTags) 
 echo $RESPONSE
@@ -19,8 +19,7 @@ RESPONSE=$(curl -X POST -H "Content-Type: application/json" -H "Authorization: A
 echo $RESPONSE 
 RESPONSE=$(curl -X PUT -H "Content-Type: application/json" -H "Authorization: Api-Token $DT_CONFIG_TOKEN" -d "$SERVICES_ANOMALY_DETECTION_CONFIG" $DT_API_URL/config/v1/anomalyDetection/services)
 echo $RESPONSE 
-RESPONSE=$(curl -X POST -H "Content-Type: application/json" -H "Authorization: Api-Token $DT_CONFIG_TOKEN" -d "$TEST_MAINTENANCE_WINDOW" $DT_API_URL/config/v1/maintenanceWindows)
-echo $RESPONSE 
+
 
 RESPONSE=$(curl -X POST -H "Content-Type: application/json" -H "Authorization: Api-Token $DT_CONFIG_TOKEN" -d "$SOCKSHOP_WEBAPP_CONFIG" $DT_API_URL/config/v1/applications/web) 
 
