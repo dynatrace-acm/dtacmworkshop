@@ -1,0 +1,8 @@
+{
+  "applicationIdentifier": "<SOCKSHOP_APP_ID>",
+  "filterConfig": {
+    "pattern": "<SOCKSHOP_FRONTEND_DOMAIN>",
+    "applicationMatchType": "EQUALS",
+    "applicationMatchTarget": "DOMAIN"
+  }
+}

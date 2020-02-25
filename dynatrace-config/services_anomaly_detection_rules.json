@@ -1,0 +1,18 @@
+{
+  "responseTimeDegradation": {
+    "detectionMode": "DETECT_USING_FIXED_THRESHOLDS",
+    "thresholds": {
+      "responseTimeThresholdMilliseconds": 3000,
+      "slowestResponseTimeThresholdMilliseconds": 7500,
+      "loadThreshold": "TEN_REQUESTS_PER_MINUTE",
+      "sensitivity": "LOW"
+    }
+  },
+  "failureRateIncrease": {
+    "detectionMode": "DETECT_AUTOMATICALLY",
+    "automaticDetection": {
+      "failingServiceCallPercentageIncreaseAbsolute": 0,
+      "failingServiceCallPercentageIncreaseRelative": 50
+    }
+  }
+}

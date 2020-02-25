@@ -1,0 +1,35 @@
+{
+  "name": "Testing",
+  "description": "Disable automatic service problem detection during testing as the environment is not stable and automated baselining will not work properly.",
+  "type": "PLANNED",
+  "suppression": "DONT_DETECT_PROBLEMS",
+  "scope": {
+    "entities": [],
+    "matches": [
+      {
+        "type": "SERVICE",
+        "managementZoneId": null,
+        "tags": [
+          {
+            "context": "KUBERNETES",
+            "key": "stage",
+            "value": "dev"
+          }
+        ],
+        "tagCombination": "AND"
+      }
+    ]
+  },
+  "schedule": {
+    "recurrenceType": "DAILY",
+    "recurrence": {
+      "dayOfWeek": null,
+      "dayOfMonth": null,
+      "startTime": "00:00",
+      "durationMinutes": 1440
+    },
+    "start": "2020-01-01 00:00",
+    "end": "2021-01-01 00:00",
+    "zoneId": "America/Toronto"
+  }
+}

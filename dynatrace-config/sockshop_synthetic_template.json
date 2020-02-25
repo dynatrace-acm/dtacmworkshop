@@ -1,0 +1,432 @@
+{
+    "name": "<SOCKSHOP_TEST_NAME>",
+    "frequencyMin": 5,
+    "enabled": true,
+    "type": "BROWSER",
+    "script": {
+      "type": "clickpath",
+      "version": "1.0",
+      "configuration": {
+        "device": {
+          "deviceName": "Desktop",
+          "orientation": "landscape"
+        }
+      },
+      "events": [
+        {
+          "type": "navigate",
+          "description": "Loading of Home page",
+          "url": "<SOCKSHOP_FRONTEND_URL>",
+          "wait": {
+            "waitFor": "page_complete"
+          }
+        },
+        {
+          "type": "click",
+          "description": "click on \"Login\"",
+          "target": {
+            "locators": [
+              {
+                "type": "css",
+                "value": "a:contains(\"Login\"):eq(0)"
+              },
+              {
+                "type": "css",
+                "value": "#login a"
+              },
+              {
+                "type": "css",
+                "value": "#login a"
+              }
+            ]
+          },
+          "button": 0
+        },
+        {
+          "type": "click",
+          "description": "click on \"username-modal\"",
+          "target": {
+            "locators": [
+              {
+                "type": "css",
+                "value": "#username-modal"
+              },
+              {
+                "type": "css",
+                "value": "input[type=\"text\"][name=\"username\"]:eq(0)"
+              },
+              {
+                "type": "dom",
+                "value": "document.forms[0][\"username\"]"
+              },
+              {
+                "type": "css",
+                "value": ".form-control:eq(0)"
+              },
+              {
+                "type": "css",
+                "value": "#login-modal div div div:nth-child(2) form:nth-child(2) div input"
+              },
+              {
+                "type": "css",
+                "value": "#username-modal"
+              }
+            ]
+          },
+          "button": 0
+        },
+        {
+          "type": "keystrokes",
+          "description": "keystrokes on \"username-modal\"",
+          "target": {
+            "locators": [
+              {
+                "type": "css",
+                "value": "#username-modal"
+              },
+              {
+                "type": "css",
+                "value": "input[type=\"text\"][name=\"username\"]:eq(0)"
+              },
+              {
+                "type": "dom",
+                "value": "document.forms[0][\"username\"]"
+              },
+              {
+                "type": "css",
+                "value": ".form-control:eq(0)"
+              },
+              {
+                "type": "css",
+                "value": "#login-modal div div div:nth-child(2) form:nth-child(2) div input"
+              },
+              {
+                "type": "css",
+                "value": "#username-modal"
+              }
+            ]
+          },
+          "simulateBlurEvent": true,
+          "textValue": "<SOCKSHOP_USERNAME>",
+          "masked": false
+        },
+        {
+          "type": "keystrokes",
+          "description": "keystrokes on \"password-modal\"",
+          "target": {
+            "locators": [
+              {
+                "type": "css",
+                "value": "#password-modal"
+              },
+              {
+                "type": "css",
+                "value": "input[type=\"password\"][name=\"password\"]:eq(0)"
+              },
+              {
+                "type": "dom",
+                "value": "document.forms[0][1]"
+              },
+              {
+                "type": "css",
+                "value": ".form-control:eq(1)"
+              },
+              {
+                "type": "css",
+                "value": "#login-modal div div div:nth-child(2) form:nth-child(2) div:nth-child(2) input"
+              },
+              {
+                "type": "css",
+                "value": "#password-modal"
+              }
+            ]
+          },
+          "simulateBlurEvent": true,
+          "textValue": "U2FsdGVkX19dgIq6yo9BQ4/ZngINhhprBAGNiwLZFOA=",
+          "masked": true
+        },
+        {
+          "type": "click",
+          "description": "click on \"Log in\"",
+          "target": {
+            "locators": [
+              {
+                "type": "css",
+                "value": "button:eq(1)"
+              },
+              {
+                "type": "dom",
+                "value": "document.forms[0][2]"
+              },
+              {
+                "type": "css",
+                "value": "button:contains(\"Log in\")"
+              },
+              {
+                "type": "css",
+                "value": ".btn:eq(1)"
+              },
+              {
+                "type": "css",
+                "value": "#login-modal div div div:nth-child(2) form:nth-child(2) p:nth-child(3) button"
+              },
+              {
+                "type": "css",
+                "value": "#login-modal div.modal-dialog div.modal-content div.modal-body form p.text-center button.btn"
+              }
+            ]
+          },
+          "button": 0,
+          "wait": {
+            "waitFor": "next_event"
+          }
+        },
+        {
+          "type": "click",
+          "description": "click on \"Colourful\"",
+          "target": {
+            "locators": [
+              {
+                "type": "css",
+                "value": "a:contains(\"Colourful\")"
+              },
+              {
+                "type": "css",
+                "value": "#hot-slider div div div:nth-child(2) div div div:nth-child(3) h3 a"
+              },
+              {
+                "type": "css",
+                "value": "#hot-slider div.owl-wrapper-outer div.owl-wrapper div.owl-item div.item div.product div.text h3 a:eq(1)"
+              }
+            ]
+          },
+          "button": 0,
+          "wait": {
+            "waitFor": "page_complete"
+          }
+        },
+        {
+          "type": "click",
+          "description": "click on \"buttonCart\"",
+          "target": {
+            "locators": [
+              {
+                "type": "css",
+                "value": "#buttonCart"
+              },
+              {
+                "type": "css",
+                "value": "a:contains(\"Add to\n                                    cart\")"
+              },
+              {
+                "type": "css",
+                "value": ".btn:eq(4)"
+              },
+              {
+                "type": "css",
+                "value": "#productMain div:nth-child(2) div p:nth-child(4) a"
+              },
+              {
+                "type": "css",
+                "value": "#buttonCart"
+              },
+              {
+                "type": "css",
+                "value": "a#buttonCart.btn.btn-primary"
+              }
+            ]
+          },
+          "button": 0,
+          "wait": {
+            "waitFor": "page_complete"
+          }
+        },
+        {
+          "type": "click",
+          "description": "click on \"numItemsInCart\"",
+          "target": {
+            "locators": [
+              {
+                "type": "css",
+                "value": "#numItemsInCart"
+              },
+              {
+                "type": "css",
+                "value": "a:contains(\"1 item(s) in cart\")"
+              },
+              {
+                "type": "css",
+                "value": "span:contains(\"in cart\")"
+              },
+              {
+                "type": "css",
+                "value": ".hidden-sm:eq(0)"
+              },
+              {
+                "type": "css",
+                "value": "#basket-overview a span:nth-child(2)"
+              },
+              {
+                "type": "css",
+                "value": "#numItemsInCart"
+              }
+            ]
+          },
+          "button": 0,
+          "wait": {
+            "waitFor": "page_complete"
+          }
+        },
+        {
+          "type": "click",
+          "description": "click on \"orderButton\"",
+          "target": {
+            "locators": [
+              {
+                "type": "css",
+                "value": "#orderButton"
+              },
+              {
+                "type": "css",
+                "value": "button[type=\"submit\"]"
+              },
+              {
+                "type": "dom",
+                "value": "document.forms[2][2]"
+              },
+              {
+                "type": "css",
+                "value": "button:contains(\"Proceed to checkout\")"
+              },
+              {
+                "type": "css",
+                "value": ".btn:eq(6)"
+              },
+              {
+                "type": "css",
+                "value": "#basket div form div:nth-child(4) div:nth-child(2) button:nth-child(2)"
+              },
+              {
+                "type": "css",
+                "value": "#orderButton"
+              }
+            ]
+          },
+          "button": 0,
+          "wait": {
+            "waitFor": "page_complete"
+          }
+        },
+        {
+          "type": "click",
+          "description": "click on \"numItemsInCart\"",
+          "target": {
+            "locators": [
+              {
+                "type": "css",
+                "value": "#numItemsInCart"
+              },
+              {
+                "type": "css",
+                "value": "a:contains(\"1 item(s) in cart\")"
+              },
+              {
+                "type": "css",
+                "value": "span:contains(\"in cart\")"
+              },
+              {
+                "type": "css",
+                "value": ".hidden-sm:eq(0)"
+              },
+              {
+                "type": "css",
+                "value": "#basket-overview a span:nth-child(2)"
+              },
+              {
+                "type": "css",
+                "value": "#numItemsInCart"
+              }
+            ]
+          },
+          "button": 0,
+          "wait": {
+            "waitFor": "page_complete"
+          }
+        },
+        {
+          "type": "click",
+          "description": "click",
+          "target": {
+            "locators": [
+              {
+                "type": "css",
+                "value": ".fa:eq(3)"
+              },
+              {
+                "type": "css",
+                "value": "#cart-list tr td:nth-child(8) a i"
+              },
+              {
+                "type": "css",
+                "value": "#cart-list tr.item td a i.fa"
+              }
+            ]
+          },
+          "button": 0,
+          "wait": {
+            "waitFor": "page_complete"
+          }
+        },
+        {
+          "type": "click",
+          "description": "click on \"Logout\"",
+          "target": {
+            "locators": [
+              {
+                "type": "css",
+                "value": "a:contains(\"Logout\")"
+              },
+              {
+                "type": "css",
+                "value": "#logout a"
+              },
+              {
+                "type": "css",
+                "value": "#logout a"
+              }
+            ]
+          },
+          "button": 0,
+          "wait": {
+            "waitFor": "page_complete"
+          }
+        }
+      ]
+    },
+    "locations": [
+      "GEOLOCATION-9999453BE4BDB3CD",
+      "GEOLOCATION-E632D7F0FABC058C",
+      "GEOLOCATION-45AB48D9D6925ECC"
+    ],
+    "anomalyDetection": {
+      "outageHandling": {
+        "globalOutage": true,
+        "localOutage": true,
+        "localOutagePolicy": {
+          "affectedLocations": 1,
+          "consecutiveRuns": 3
+        }
+      },
+      "loadingTimeThresholds": {
+        "enabled": false,
+        "thresholds": []
+      }
+    },
+    "manuallyAssignedApps": [
+	"<SOCKSHOP_WEB_APP_ID>"
+    ],
+    "keyPerformanceMetrics": {
+      "loadActionKpm": "VISUALLY_COMPLETE",
+      "xhrActionKpm": "VISUALLY_COMPLETE"
+    }
+  }
