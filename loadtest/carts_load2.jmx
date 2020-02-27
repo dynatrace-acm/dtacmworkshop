@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="4.0" jmeter="4.0 r1823414">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.1.1 r1855137">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -19,7 +19,7 @@
           </elementProp>
           <elementProp name="DT_LTN" elementType="Argument">
             <stringProp name="Argument.name">DT_LTN</stringProp>
-            <stringProp name="Argument.value">Default</stringProp>
+            <stringProp name="Argument.value">Build2</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="SERVER_PORT" elementType="Argument">
@@ -90,7 +90,7 @@ if((LTN == null) || (LTN.length() == 0)) {
 }
 if(LTN == null) LTN = &quot;NoTestName&quot;;
 
-String LSN = (bsh.args.length &gt; 0) ? bsh.args[0] : &quot;Test Scenario&quot;;
+String LSN = (bsh.args.length &gt; 0) ? bsh.args[0] : &quot;carts itemsController&quot;;
 String TSN = sampler.getName();
 String VU = ctx.getThreadGroup().getName() + ctx.getThreadNum();
 String headerValue = &quot;LSN=&quot;+ LSN + &quot;;TSN=&quot; + TSN + &quot;;LTN=&quot; + LTN + &quot;;VU=&quot; + VU + &quot;;&quot;;
@@ -174,4 +174,3 @@ hm.add(new org.apache.jmeter.protocol.http.control.Header(&quot;x-dynatrace-test
     </hashTree>
   </hashTree>
 </jmeterTestPlan>
-
