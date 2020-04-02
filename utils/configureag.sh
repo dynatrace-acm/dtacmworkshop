@@ -19,5 +19,20 @@ kubectl apply -f ../manifests/dynatrace/kubernetes-monitoring-service-account.ya
 export API_URL=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
 export TOKEN=$(kubectl get secret $(kubectl get sa dynatrace-monitoring -o jsonpath='{.secrets[0].name}' -n dynatrace) -o jsonpath='{.data.token}' -n dynatrace | base64 --decode)
 export CLUSTER_NAME="acmworkshop"
+export CONNECTION_CONFIG="{ \"label\": \"$CLUSTER_NAME\", \"endpointUrl\": \"$API_URL\", \"authToken\": \"$TOKEN\", \"active\": true, \"certificateCheckEnabled\": false, \"eventsIntegrationEnabled\": true, \"eventsFieldSelectors\": [{\"label\": \"SockShop-Production\", \"fieldSelector\": \"involvedObject.namespace=production\", \"active\": true}, {\"label\": \"SockShop-Dev\", \"fieldSelector\": \"involvedObject.namespace=dev\", \"active\": true}]}"
 
-curl -X POST "$DT_TENANT_URL/api/config/v1/kubernetes/credentials" -H "accept: application/json; charset=utf-8" -H "Authorization: Api-Token $API_TOKEN" -H "Content-Type: application/json; charset=utf-8" -d "{ \"label\": \"$CLUSTER_NAME\", \"endpointUrl\": \"$API_URL\", \"authToken\": \"$TOKEN\", \"active\": true}"
+ENDPOINTS=$(curl -s "$DT_TENANT_URL/api/config/v1/kubernetes/credentials" -H "accept: application/json" -H "Authorization: Api-Token $API_TOKEN")
+
+
+ for row in $(echo "${ENDPOINTS}" | jq '.values' | jq -c '.[]'); do
+        
+    if [ $(echo $row | jq -c -r ".name") = $CLUSTER_NAME ]
+    then
+        echo "Cluster already exists... updating configuration"
+        ENDPOINT_ID=$(echo $row | jq -c -r ".id")
+        curl -X PUT "$DT_TENANT_URL/api/config/v1/kubernetes/credentials/$ENDPOINT_ID" -H "accept: application/json; charset=utf-8" -H "Authorization: Api-Token $API_TOKEN" -H "Content-Type: application/json; charset=utf-8" -d "$CONNECTION_CONFIG"
+        exit 0
+    fi
+ done
+
+curl -X POST "$DT_TENANT_URL/api/config/v1/kubernetes/credentials" -H "accept: application/json; charset=utf-8" -H "Authorization: Api-Token $API_TOKEN" -H "Content-Type: application/json; charset=utf-8" -d "$CONNECTION_CONFIG"
