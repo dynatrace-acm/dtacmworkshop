@@ -25,13 +25,15 @@ ENDPOINTS=$(curl -s "$DT_TENANT_URL/api/config/v1/kubernetes/credentials" -H "ac
 
 
  for row in $(echo "${ENDPOINTS}" | jq '.values' | jq -c '.[]'); do
-        
+
     if [ $(echo $row | jq -c -r ".name") = $CLUSTER_NAME ]
     then
         echo "Cluster already exists... updating configuration"
         ENDPOINT_ID=$(echo $row | jq -c -r ".id")
-        curl -X PUT "$DT_TENANT_URL/api/config/v1/kubernetes/credentials/$ENDPOINT_ID" -H "accept: application/json; charset=utf-8" -H "Authorization: Api-Token $API_TOKEN" -H "Content-Type: application/json; charset=utf-8" -d "$CONNECTION_CONFIG"
-        exit 0
+        curl -X DELETE "$DT_TENANT_URL/api/config/v1/kubernetes/credentials/$ENDPOINT_ID" -H "accept: application/json; charset=utf-8" -H "Authorization: Api-Token $API_TOKEN" -H "Content-Type:application/json; charset=utf-8"
+
+        #curl -X PUT "$DT_TENANT_URL/api/config/v1/kubernetes/credentials/$ENDPOINT_ID" -H "accept: application/json; charset=utf-8" -H "Authorization: Api-Token $API_TOKEN" -H "Content-Type: application/json; charset=utf-8" -d "$CONNECTION_CONFIG"
+        #exit 0
     fi
  done
 
