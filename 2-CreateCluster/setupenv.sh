@@ -5,7 +5,7 @@ export API_TOKEN=$(cat ../1-Credentials/creds.json | jq -r '.dynatraceApiToken')
 export PAAS_TOKEN=$(cat ../1-Credentials/creds.json | jq -r '.dynatracePaaSToken')
 export TENANTID=$(cat ../1-Credentials/creds.json | jq -r '.dynatraceTenantID')
 export ENVIRONMENTID=$(cat ../1-Credentials/creds.json | jq -r '.dynatraceEnvironmentID')
-
+export AG=$(cat ../1-Credentials/creds.json | jq -r '.dynatracactiveGate')
 
 if hash gcloud 2>/dev/null; then
     echo "Google Cloud"
@@ -23,7 +23,8 @@ echo "API_TOKEN = $API_TOKEN"
 echo "PAAS_TOKEN = $PAAS_TOKEN"
 echo "TENANTID = $TENANTID"
 echo "ENVIRONMENTID = $ENVIRONMENTID"
-echo "Cloud Provider $CLOUD_PROVIDER"
+echo "Cloud Provider = $CLOUD_PROVIDER"
+echo "ActiveGate = $AG"
 
 echo ""
 read -p "Is this all correct? (y/n) : " -n 1 -r
@@ -38,8 +39,12 @@ usage()
 deployGKE()
 {
     echo ""
-    echo "Creating ActiveGate VM..."
-    gcloud compute instances create dtactivegate --zone=us-central1-a --machine-type=n1-standard-2 --metadata=tenant_id=$TENANTID,environment_id=$ENVIRONMENTID,paas_token=$PAAS_TOKEN --metadata-from-file startup-script=../utils/deployagsoftware.sh --image=debian-9-stretch-v20190916 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=dtactivegate --reservation-affinity=any
+    
+    if [ $AG = 'Y' ] || [ $AG = 'y' ]
+    then
+        echo "Creating ActiveGate VM..."
+        gcloud compute instances create dtactivegate --zone=us-central1-a --machine-type=n1-standard-2 --metadata=tenant_id=$TENANTID,environment_id=$ENVIRONMENTID,paas_token=$PAAS_TOKEN --metadata-from-file startup-script=../utils/deployagsoftware.sh --image=debian-9-stretch-v20190916 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=dtactivegate --reservation-affinity=any
+    fi
 
     echo "Creating GKE Cluster..."
 
@@ -98,8 +103,12 @@ nohup ../utils/cartsLoadTest.sh &
 
 case $CLOUD_PROVIDER in
         GKE)
-        echo "Configuring ActiveGate K8s.."
-        ../utils/configureag.sh
+        if [ $AG = 'Y' ] || [ $AG = 'y' ]
+        then
+            echo "Configuring ActiveGate K8s..."
+            ../utils/configureag.sh
+            ../utils/configureK8sDashboard.sh
+        fi
         echo "-----------------------"
         echo "Deployment Complete"
         echo "-----------------------"

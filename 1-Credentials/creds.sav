@@ -2,5 +2,7 @@
     "dynatraceTenantID": "DYNATRACE_TENANT_ID",
     "dynatraceEnvironmentID": "DYNATRACE_ENVIRONMENT_ID",
     "dynatraceApiToken": "DYNATRACE_API_TOKEN",
-    "dynatracePaaSToken": "DYNATRACE_PAAS_TOKEN"
+    "dynatracePaaSToken": "DYNATRACE_PAAS_TOKEN",
+    "dynatracactiveGate": "DYNATRACE_AG",
+    "dynatraceK8sClusterID": "DYNATRACE_K8S_CLUSTER_ID"
 }
