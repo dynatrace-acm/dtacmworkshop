@@ -106,7 +106,7 @@
         "timeframe": null,
         "managementZone": null
       },
-      "markdown": "## [Cluster Resource Availability](https://sxz82542.live.dynatrace.com/ui/kubernetes/KUBERNETES_CLUSTER-EAD6F808597CF0C9)"
+      "markdown": "## [Cluster Resource Availability](https://TENANT_ID.live.dynatrace.com/ui/kubernetes/KUBERNETES_CLUSTER_ID)"
     },
     {
       "name": "Custom chart",
@@ -214,7 +214,7 @@
         "timeframe": "Last 2 hours",
         "managementZone": null
       },
-      "markdown": "## [Running pods per namespace](https://sxz82542.live.dynatrace.com/ui/kubernetes/KUBERNETES_CLUSTER-EAD6F808597CF0C9/cloud-applications?gtf=l_2_HOURS&gf=all&aggmode=latest_values)"
+      "markdown": "## [Running pods per namespace](https://TENANT_ID.live.dynatrace.com/ui/kubernetes/KUBERNETES_CLUSTER_ID/cloud-applications?gtf=l_2_HOURS&gf=all&aggmode=latest_values)"
     },
     {
       "name": "Custom chart",
@@ -328,7 +328,7 @@
         "timeframe": "Last 2 hours",
         "managementZone": null
       },
-      "markdown": "## [SockShop pods](https://sxz82542.live.dynatrace.com/ui/kubernetes/KUBERNETES_CLUSTER-EAD6F808597CF0C9/cloud-applications?gtf=l_2_HOURS&gf=all&aggmode=latest_values&filters=CLOUD_APPLICATION-RELATED_NAMESPACE%3Dproduction&filters=CLOUD_APPLICATION-RELATED_NAMESPACE%3Ddev)"
+      "markdown": "## [SockShop pods](https://TENANT_ID.live.dynatrace.com/ui/kubernetes/KUBERNETES_CLUSTER_ID/cloud-applications?gtf=l_2_HOURS&gf=all&aggmode=latest_values&filters=CLOUD_APPLICATION-RELATED_NAMESPACE%3Dproduction&filters=CLOUD_APPLICATION-RELATED_NAMESPACE%3Ddev)"
     },
     {
       "name": "Custom chart",
