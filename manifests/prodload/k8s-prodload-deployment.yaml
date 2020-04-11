@@ -10,14 +10,7 @@ spec:
     # This container clones the desired git repo to the EmptyDir volume.
     - name: git-clone
       image: alpine/git # Any image with git will do
-      args:
-        - clone
-        - --single-branch
-        - --
-        - --branch loadtest
-        - --
-        - https://github.com/dynatrace-acm/dtacmworkshop # Your repo
-        - /repo # Put it in the volume
+      args: ["clone", "--single-branch", "https://github.com/dynatrace-acm/dtacmworkshop", "/repo"]
       securityContext:
         runAsUser: 1 # Any non-root user will do. Match to the workload.
         allowPrivilegeEscalation: false
