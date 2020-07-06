@@ -41,7 +41,7 @@
     stages{
         stage(&apos;Checkout code&apos;){
             steps{
-                git &apos;https://github.com/dynatrace-acm/dtacmworkshop.git&apos;
+                git branch: &apos;feature&apos;, url: &apos;https://github.com/dynatrace-acm/dtacmworkshop.git&apos;
             }
         }
         stage(&apos;Build Code&apos;) {
@@ -99,7 +99,7 @@
         }
         stage (&apos;Run Load Test&apos;){
             steps{
-                container(&apos;kubectl&apos;){
+                /*container(&apos;kubectl&apos;){
                     echo &apos;Get Carts URL&apos;
                     script{
                         dir(&quot;loadtest&quot;){
@@ -108,7 +108,7 @@
                             
                         }
                     }
-                }
+                }*/
                 /*container(&apos;curl&apos;){
                     script{
                         dir(&quot;loadtest&quot;){
