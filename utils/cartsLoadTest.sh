@@ -2,4 +2,4 @@
 
 kubectl create ns loadgen
 
-kubectl apply -f ./cartsloadgen.yaml
+kubectl apply -f ../utils/cartsloadgen.yaml
