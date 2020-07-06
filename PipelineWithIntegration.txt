@@ -72,7 +72,7 @@ pipeline{
         }
         stage ('Run Load Test'){
             steps{
-                container('kubectl'){
+                /*container('kubectl'){
                     echo 'Get Carts URL'
                     script{
                         dir("loadtest"){
@@ -81,7 +81,7 @@ pipeline{
                             
                         }
                     }
-                }
+                }*/
                 container('jmeter'){
                     script{
                         recordDynatraceSession(envId: 'Dynatrace Server', tagMatchRules: [[meTypes: [[meType: 'SERVICE']], tags: [[context: 'KUBERNETES', key: 'app', value: 'carts'], [context: 'KUBERNETES', key: 'stage', value: 'dev']]]], testCase: 'loadtest') {
