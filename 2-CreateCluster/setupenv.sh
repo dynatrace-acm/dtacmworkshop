@@ -96,10 +96,10 @@ sleep 120
 echo "Deploying SockShop Application"
 ../utils/deploy-sockshop.sh
 
-sleep 120
+sleep 10
 
 echo "Start Production Load"
-nohup ../utils/cartsLoadTest.sh &
+../utils/cartsLoadTest.sh
 
 case $CLOUD_PROVIDER in
         GKE)
