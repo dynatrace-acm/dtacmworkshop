@@ -16,7 +16,7 @@ export JENKINS_USERNAME_DECODE=$(echo $JENKINS_USERNAME | base64 --decode)
 export JENKINS_PASSWORD=$(kubectl get secret jenkins-secret -n cicd -o yaml | grep "password:" | sed 's~password:[ \t]*~~')
 export JENKINS_PASSWORD_DECODE=$(echo $JENKINS_PASSWORD | base64 --decode)
 export K8S_MASTER=$(kubectl config view --minify | grep server | cut -f 2- -d ":" | tr -d " " | sed 's/https\?:\/\///')
-export POD_IP=$(kubectl get pods -n cicd -o yaml | grep "podIP" | sed 's~podIP:[ /t]*~~' | sed -e 's/^[ \t]*//')
+export POD_IP=$(kubectl get pods -n cicd -o yaml | grep "podIP:" | sed 's~podIP:[ /t]*~~' | sed -e 's/^[ \t]*//')
 export JENKINS_POD=$(kubectl get po -n cicd --no-headers=true -o custom-columns=:metadata.name)
 
 kubectl exec -it -n cicd $JENKINS_POD -- sed -i "s/JENKINS_SERVER_PLACEHOLDER/https:\/\/$K8S_MASTER/g" /var/jenkins_home/config.xml
