@@ -7,29 +7,33 @@ export ENVIRONMENTID=$(cat ../1-Credentials/creds.json | jq -r '.dynatraceEnviro
 
 kubectl create namespace dynatrace
 
-kubectl apply -f https://github.com/Dynatrace/dynatrace-oneagent-operator/releases/latest/download/kubernetes.yaml
+wget https://github.com/dynatrace/dynatrace-operator/releases/latest/download/install.sh -O install.sh
 
-kubectl -n dynatrace create secret generic oneagent --from-literal="apiToken="$API_TOKEN --from-literal="paasToken="$PAAS_TOKEN
+sh ./install.sh --api-url "https://$TENANTID.live.dynatrace.com/api" --api-token $API_TOKEN --paas-token $PAAS_TOKEN --enable-volume-storage --skip-ssl-verification
 
-if [[ -f "cr.yaml" ]]; then
-    rm -f cr.yaml
-    echo "Removed cr.yaml"
-fi
+# kubectl apply -f https://github.com/Dynatrace/dynatrace-oneagent-operator/releases/latest/download/kubernetes.yaml
 
-curl -o cr.yaml https://raw.githubusercontent.com/Dynatrace/dynatrace-oneagent-operator/master/deploy/cr.yaml
+# kubectl -n dynatrace create secret generic oneagent --from-literal="apiToken="$API_TOKEN --from-literal="paasToken="$PAAS_TOKEN
 
-case $ENVIRONMENTID in
-        '')
-        echo "SaaS Deployment"
-        sed -i 's/apiUrl: https:\/\/ENVIRONMENTID.live.dynatrace.com\/api/apiUrl: https:\/\/'$TENANTID'.live.dynatrace.com\/api/' cr.yaml
-        ;;
-        *)
-        echo "Managed Deployment"
-        sed -i 's/apiUrl: https:\/\/ENVIRONMENTID.live.dynatrace.com\/api/apiUrl: https:\/\/'$TENANTID'.dynatrace-managed.com\/e\/'$ENVIRONMENTID'\/api/' cr.yaml
-        ;;
-        ?)
-        usage
-        ;;
-esac
+#if [[ -f "cr.yaml" ]]; then
+#    rm -f cr.yaml
+#    echo "Removed cr.yaml"
+#fi
 
-kubectl create -f cr.yaml
+# curl -o cr.yaml https://raw.githubusercontent.com/Dynatrace/dynatrace-oneagent-operator/master/deploy/cr.yaml
+
+# case $ENVIRONMENTID in
+#        '')
+#        echo "SaaS Deployment"
+#        sed -i 's/apiUrl: https:\/\/ENVIRONMENTID.live.dynatrace.com\/api/apiUrl: https:\/\/'$TENANTID'.live.dynatrace.com\/api/' cr.yaml
+#        ;;
+#        *)
+#        echo "Managed Deployment"
+#        sed -i 's/apiUrl: https:\/\/ENVIRONMENTID.live.dynatrace.com\/api/apiUrl: https:\/\/'$TENANTID'.dynatrace-managed.com\/e\/'$ENVIRONMENTID'\/api/' cr.yaml
+#        ;;
+#        ?)
+#        usage
+#        ;;
+# esac
+
+# kubectl create -f cr.yaml

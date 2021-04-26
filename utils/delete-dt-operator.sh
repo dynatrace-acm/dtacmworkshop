@@ -1,8 +1,9 @@
 #!/bin/bash
 
-kubectl delete -n dynatrace oneagent --all
+kubectl delete -n dynatrace dynakube --all
 
-LATEST_RELEASE=v0.3.1
-kubectl delete -f https://raw.githubusercontent.com/Dynatrace/dynatrace-oneagent-operator/$LATEST_RELEASE/deploy/kubernetes.yaml
+
+kubectl delete -f https://github.com/Dynatrace/dynatrace-operator/releases/latest/download/kubernetes.yaml
+kubectl delete secret dynakube -n dynatrace
 
 kubectl delete namespace dynatrace
